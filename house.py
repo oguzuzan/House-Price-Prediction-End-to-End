@@ -144,15 +144,15 @@ from sklearn.preprocessing import LabelEncoder
 import joblib
 
 # Kaydettigim Joblib dosyalarini Cagirmak icin
+# Önbellek kullanımı
+@st.cache_data(persist=True)
 def load_model_and_features():
-    # Modeli cagiriyorum.
     model = joblib.load('new_model_xgb.joblib')
-
-    # Sutun isimlerini cagiriyorum.
     feature_names = joblib.load('feature_names.joblib')
-
+    
     return model, feature_names
 
+@st.cache_data(hash_funcs={xgb.sklearn.XGBRegressor: id})
 def predict_sale_price(model, input_data):
     label_encoder = LabelEncoder()
 
@@ -164,7 +164,9 @@ def predict_sale_price(model, input_data):
     return np.expm1(prediction)  # Reverse the log transformation
 
 # Sutunlarin Aciklama Kismi icin
-feature_descriptions = {
+@st.cache_data(persist=True)
+def get_feature_descriptions():
+    return {
     'OverallQual': 'Genel malzeme ve kaplama kalitesi',
     'GarageType_Attchd': 'Ek garaj Var ise 1 Yok ise 0',
     'BsmtQual': 'Bodrum katının yüksekliği (Yok ise 0)',
@@ -179,6 +181,7 @@ feature_descriptions = {
     'CentralAir': 'Klima Var mi?',
     'KitchenQual': 'Mutfak kalitesi',
     'MSZoning_RL': 'Ev Az nüfuslu Bir Yerde mi?'
+    
 }
 
 # House App
@@ -193,6 +196,7 @@ def main():
 
     # Sutunlarin Ne oldugunu aciklayan SideBar
     st.sidebar.title("Feature Descriptions")
+    feature_descriptions = get_feature_descriptions()
     for feature, description in feature_descriptions.items():
         st.sidebar.markdown(f"**{feature}**: {description}")
 
