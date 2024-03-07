@@ -6,23 +6,6 @@ from scipy.stats import skew
 from sklearn.preprocessing import LabelEncoder
 import joblib
 
-feature_names = [
-    'OverallQual',
-    'GarageType_Attchd',
-    'BsmtQual',
-    'TotalSF',
-    'GarageCars',
-    'FullBath',
-    'GrLivArea',
-    'PavedDrive',
-    'ExterQual',
-    'Fireplaces',
-    'YearRemodAdd',
-    'CentralAir',
-    'KitchenQual',
-    'MSZoning_RL'
-]
-
 # Kaydettigim Joblib dosyalarini Cagirmak icin
 def load_model_and_features():
     # Modeli cagiriyorum.
@@ -78,24 +61,31 @@ def main():
 
     # Inputlari girdigimiz yerin Duzenlemesi ve Ayarlanmasi
     input_features = {}
-
-    input_methods = {
-    'OverallQual': lambda: st.slider(f"Select Overall Quality", 1, 10, value=5),
-    'GarageType_Attchd': lambda: st.selectbox("Select GarageType_Attchd", ['0', '1']),
-    'BsmtQual': lambda: st.selectbox("Select BsmtQual", ['0', '1', '2', '3', '4']),
-    'GarageCars': lambda: st.number_input("Enter GarageCars", value=0, step=1),
-    'FullBath': lambda: st.number_input("Enter FullBath", value=0, step=1),
-    'Fireplaces': lambda: st.number_input("Enter Fireplaces", value=0, step=1),
-    'PavedDrive': lambda: st.selectbox("Select Paved Drive", [0, 1]),
-    'ExterQual': lambda: st.slider("Select Exter Quality", 1, 3, value=5),
-    'YearRemodAdd': lambda: st.number_input("Enter YearRemodAdd", value=0, step=1),
-    'CentralAir': lambda: st.selectbox("Select CentralAir", [0, 1]),
-    'KitchenQual': lambda: st.slider("Select KitchenQual", 1, 3, value=5),
-    'MSZoning_RL': lambda: st.selectbox("Select MSZoning_RL", [0, 1]),
-}
-
     for feature in feature_names:
-        input_features[feature] = input_methods.get(feature, lambda: st.number_input(f"Enter {feature}", value=0.0))()
+        if feature == 'OverallQual':
+            input_features[feature] = st.slider(f"Select {feature}", 1, 10, value=5)
+        elif feature == 'GarageType_Attchd':
+            input_features[feature] = st.selectbox(f"Select {feature}", ['0', '1'])
+        elif feature == 'BsmtQual':
+            input_features[feature] = st.selectbox(f"Select {feature}", ['0', '1', '2', '3', '4'])
+        elif feature == 'GarageCars':
+            input_features[feature] = st.number_input(f"Enter {feature}", value=0, step=1)
+        elif feature in ["FullBath", "Fireplaces"]:
+            input_features[feature] = st.number_input(f"Enter {feature}", value=0, step=1)
+        elif feature == 'PavedDrive':
+            input_features[feature] = st.selectbox(f"Select {feature}", [0, 1])
+        elif feature == 'ExterQual':
+            input_features[feature] = st.slider(f"Select {feature}", 1, 3, value=5)
+        elif feature == 'YearRemodAdd':
+            input_features[feature] = st.number_input(f"Enter {feature}", value=0, step=1)
+        elif feature == 'CentralAir':
+            input_features[feature] = st.selectbox(f"Select {feature}", [0, 1])
+        elif feature == 'KitchenQual':
+            input_features[feature] = st.slider(f"Select {feature}", 1, 3, value=5)
+        elif feature == 'MSZoning_RL':
+            input_features[feature] = st.selectbox(f"Select {feature}", [0, 1])
+        else:
+            input_features[feature] = st.number_input(f"Enter {feature}", value=0.0)
 
     # Girdigimiz inputlari kaydeden bir DataFrame Olusturmak icin (Opsiyonel)
     input_df = pd.DataFrame([input_features])
