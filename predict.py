@@ -6,15 +6,9 @@ from scipy.stats import skew
 from sklearn.preprocessing import LabelEncoder
 import joblib
 
-# Kaydettigim Joblib dosyalarini Cagirmak icin
-def load_model_and_features():
-    # Modeli cagiriyorum.
-    model = joblib.load('new_model_xgb.joblib')
 
-    # Sutun isimlerini cagiriyorum.
-    feature_names = joblib.load('feature_names.joblib')
-
-    return model, feature_names
+model = joblib.load('new_model_xgb.joblib')
+feature_names = joblib.load('feature_names.joblib')
 
 def predict_sale_price(model, input_data):
     label_encoder = LabelEncoder()
@@ -49,7 +43,7 @@ def main():
     st.title("House Sale Price Prediction App")
 
     # Modeli Cagiriyoruz.
-    trained_model, feature_names = load_model_and_features()
+    trained_model = model
 
     # 2.Baslik
     st.header("User Input Features")
